@@ -38,10 +38,6 @@ hooks.each do |key, value|
 	fileOutput.puts "					<td>#{value[0]}</td>"
 	fileOutput.puts "					<td>#{value[1]} / #{value[2]}</td>"
 	fileOutput.puts "				</tr>"
-	# puts "Hook name: #{key}\n"
-	# puts "Arguments: #{value[0]}\n"
-	# puts "File\\Line: #{value[1]}\\#{value[2]}"
-	# puts "\n"
 end
 
 fileOutput.puts "			</tbody>"
