@@ -2,7 +2,6 @@
 
 hooks = Hash.new
 line_no = 0
-mybb_core_location = ""
 
 Dir.glob("**/*.php") do |mybb_file|
 	file = File.open(mybb_file, "r")
@@ -16,12 +15,41 @@ Dir.glob("**/*.php") do |mybb_file|
 	end
 end
 
+fileOutput = File.new("output.html", "w+")
+fileOutput.puts "<!doctype html>"
+fileOutput.puts "<html lang=\"en-GB\">"
+fileOutput.puts "	<head>"
+fileOutput.puts "		<title>MyBB Hooks</title>"
+fileOutput.puts "	</head>"
+fileOutput.puts "	<body>"
+fileOutput.puts "		<h1>MyBB Hooks</h1>"
+fileOutput.puts "		<table>"
+fileOutput.puts "			<thead>"
+fileOutput.puts "				<tr>"
+fileOutput.puts "					<th>Hook Name</th>"
+fileOutput.puts "					<th>Arguments</th>"
+fileOutput.puts "					<th>File Name / Line Number</th>"
+fileOutput.puts "				</tr>"
+fileOutput.puts "			</thead>"
+fileOutput.puts "			<tbody>"
+
 hooks.each do |key, value|
-	puts "Hook name: #{key}\n"
-	puts "Arguments: #{value[0]}\n"
-	puts "File\\Line: #{value[1]}\\#{value[2]}"
-	puts "\n"
+	fileOutput.puts "				<tr>"
+	fileOutput.puts "					<td><strong>#{key}</strong></td>"
+	fileOutput.puts "					<td>#{value[0]}</td>"
+	fileOutput.puts "					<td>#{value[1]} / #{value[2]}</td>"
+	fileOutput.puts "				</tr>"
+	# puts "Hook name: #{key}\n"
+	# puts "Arguments: #{value[0]}\n"
+	# puts "File\\Line: #{value[1]}\\#{value[2]}"
+	# puts "\n"
 end
 
-puts "Press ENTER to exit"
-command = gets
+fileOutput.puts "			</tbody>"
+fileOutput.puts "		</table>"
+fileOutput.puts "	</body>"
+fileOutput.puts "</html>"
+
+fileOutput.close
+
+system("start output.html")
