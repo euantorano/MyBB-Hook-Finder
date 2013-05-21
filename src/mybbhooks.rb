@@ -9,7 +9,7 @@ OptionParser.new do |opts|
 
 	options[:mybb_root] = ""
 	opts.on( '-p', '--path PATH', 'Specify a path to the MyBB root. Defaults to current directory.' ) do |mybb_path|
-		options[:mybb_root] = mybb_path.strip.chomp("\\").chomp("/")
+		options[:mybb_root] = mybb_path.strip.chomp("\\").chomp("/") + "/"
 	end
 
 	options[:output_file] = "output.html"
@@ -27,10 +27,10 @@ end.parse!
 hooks = Hash.new
 file_hooks = Hash.new
 
-Dir.glob(options[:mybb_root] + "/**/*.php") do |mybb_file|
+Dir.glob(options[:mybb_root] + "**/*.php") do |mybb_file|
 	file = File.open(mybb_file, "r")
 	line_no = 0
-	file_name = mybb_file[options[:mybb_root].length + 1, mybb_file.length - options[:mybb_root].length - 1]
+	file_name = mybb_file[options[:mybb_root].length, mybb_file.length - options[:mybb_root].length]
 	while !file.eof?
 		line = file.readline
 		line_no += 1
