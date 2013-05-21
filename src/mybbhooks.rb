@@ -25,15 +25,21 @@ end.parse!
 
 # Hook parsing
 hooks = Hash.new
+file_hooks = Hash.new
 
 Dir.glob(options[:mybb_root] + "/**/*.php") do |mybb_file|
 	file = File.open(mybb_file, "r")
 	line_no = 0
+	file_name = mybb_file[options[:mybb_root].length + 1, mybb_file.length - options[:mybb_root].length - 1]
 	while !file.eof?
 		line = file.readline
 		line_no += 1
 		if (line =~ /\$plugins\->run_hooks\(((["']?)([a-zA-Z\-_0-9]*)(["']?))([,]?)([ \$a-zA-Z0-9]*?)\);/i)
 			hooks[$3.strip] = [$6.strip, mybb_file, line_no]
+			if (!file_hooks.has_key?(mybb_file))
+				file_hooks[file_name] = []
+			end
+			file_hooks[file_name] << [$3.strip, $6.strip, line_no]
 		end
 	end
 end

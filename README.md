@@ -22,3 +22,11 @@ This will detail all available options such as below:
 		-h, --help                       Display this help screen
 
 If you do not pass any arguments to the script, it will run ony any and all PHP scripts in the current directory and it's children and will store the output in output.html.
+
+## Finding hooks by file
+
+Hooks are also grouped by file within the file_hooks map. They're not currently outputted, but you can access them by simply adding:
+
+	puts file_hooks
+
+I'll be modifying the output script soon so you can optionally group by file.
