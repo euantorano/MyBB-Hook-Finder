@@ -17,6 +17,11 @@ OptionParser.new do |opts|
 		options[:output_file] = output_file
 	end
 
+	options[:group_output] = true
+	opts.on( '-n', '--nogroup', 'Don\'t group hooks by file.' ) do
+		options[:group_output] = false
+	end
+
 	opts.on( '-h', '--help', 'Display this help screen' ) do
 		puts opts
 		exit
@@ -25,7 +30,7 @@ end.parse!
 
 # Hook parsing
 hooks = Hash.new
-file_hooks = Hash.new
+file_hooks = Hash.new{|hash, key| hash[key] = Array.new}
 
 Dir.glob(options[:mybb_root] + "**/*.php") do |mybb_file|
 	file = File.open(mybb_file, "r")
@@ -36,10 +41,7 @@ Dir.glob(options[:mybb_root] + "**/*.php") do |mybb_file|
 		line_no += 1
 		if (line =~ /\$plugins\->run_hooks\(((["']?)([a-zA-Z\-_0-9]*)(["']?))([,]?)([ \$a-zA-Z0-9]*?)\);/i)
 			hooks[$3.strip] = [$6.strip, mybb_file, line_no]
-			if (!file_hooks.has_key?(mybb_file))
-				file_hooks[file_name] = []
-			end
-			file_hooks[file_name] << [$3.strip, $6.strip, line_no]
+			file_hooks[file_name].push([$3.strip, $6.strip, line_no])
 		end
 	end
 end
@@ -49,25 +51,69 @@ fileOutput.puts "<!doctype html>"
 fileOutput.puts "<html lang=\"en-GB\">"
 fileOutput.puts "	<head>"
 fileOutput.puts "		<title>MyBB Hooks</title>"
+fileOutput.puts "		<style>
+							* {
+								margin: 0;
+								padding: 0;
+							}
+
+							body {
+								padding: 4px;
+								overflow-y: scroll;
+								font-family: Tahoma, Verdana, Segoe, sans-serif;
+							}
+
+							table {
+								margin: 8px 4px 4px;
+								width: 100%;
+								border: 1px solid rgba(0, 0, 0, 0.2);
+							}
+
+							td, th {
+								padding: 4px;
+								border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+							}
+
+							tbody tr:last-child td {
+								border-bottom: 0;
+							}
+
+							th {
+								background: rgba(0, 0, 0, 0.1);
+							}
+						</style>"
 fileOutput.puts "	</head>"
 fileOutput.puts "	<body>"
 fileOutput.puts "		<h1>MyBB Hooks</h1>"
 fileOutput.puts "		<table>"
-fileOutput.puts "			<thead>"
-fileOutput.puts "				<tr>"
-fileOutput.puts "					<th>Hook Name</th>"
-fileOutput.puts "					<th>Arguments</th>"
-fileOutput.puts "					<th>File Name / Line Number</th>"
-fileOutput.puts "				</tr>"
-fileOutput.puts "			</thead>"
-fileOutput.puts "			<tbody>"
 
-hooks.each do |key, value|
-	fileOutput.puts "				<tr>"
-	fileOutput.puts "					<td><strong>#{key}</strong></td>"
-	fileOutput.puts "					<td>#{value[0]}</td>"
-	fileOutput.puts "					<td>#{value[1]} / #{value[2]}</td>"
-	fileOutput.puts "				</tr>"
+if (options[:group_output])
+	i = 0
+	file_hooks.each_pair do |key, value|
+		fileOutput.puts "			<thead>"
+		fileOutput.puts "				<tr>"
+		fileOutput.puts "					<th colspan=\"3\" class=\"tcat\"><strong>File: </strong> #{key}</th>"
+		fileOutput.puts "				</tr>"
+		fileOutput.puts "			</thead>"
+		fileOutput.puts "			<tbody id=\"hook_group_#{i}\">"
+		file_hooks[key].each do |subVal|
+			fileOutput.puts "				<tr>"
+			fileOutput.puts "					<td><strong>Hook: </strong> #{subVal[0]}</td>"
+			fileOutput.puts "					<td><strong>Params: </strong> #{subVal[1]}</td>"
+			fileOutput.puts "					<td><strong>Line: </strong> #{subVal[2]}</td>"
+			fileOutput.puts "				</tr>"
+		end
+		fileOutput.puts "			</tbody>"
+		i += 1
+	end
+else
+	hooks.each do |key, value|
+		fileOutput.puts "				<tr>"
+		fileOutput.puts "					<td><strong>Hook: </strong>#{key}</td>"
+		fileOutput.puts "					<td><strong>Params: </strong>#{value[0]}</td>"
+		fileOutput.puts "					<td><strong>File / Line </strong>#{value[1]} / #{value[2]}</td>"
+		fileOutput.puts "				</tr>"
+	end
 end
 
 fileOutput.puts "			</tbody>"
