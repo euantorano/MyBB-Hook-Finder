@@ -52,36 +52,40 @@ fileOutput.puts "<html lang=\"en-GB\">"
 fileOutput.puts "	<head>"
 fileOutput.puts "		<title>MyBB Hooks</title>"
 fileOutput.puts "		<style>
-							* {
-								margin: 0;
-								padding: 0;
-							}
+			* {
+				margin: 0;
+				padding: 0;
+			}
 
-							body {
-								padding: 4px;
-								overflow-y: scroll;
-								font-family: Tahoma, Verdana, Segoe, sans-serif;
-							}
+			body {
+				padding: 4px;
+				overflow-y: scroll;
+				font-family: Tahoma, Verdana, Segoe, sans-serif;
+			}
 
-							table {
-								margin: 8px 4px 4px;
-								width: 100%;
-								border: 1px solid rgba(0, 0, 0, 0.2);
-							}
+			table {
+				margin: 8px 4px 4px;
+				width: 100%;
+				border: 1px solid rgba(0, 0, 0, 0.2);
+			}
 
-							td, th {
-								padding: 4px;
-								border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-							}
+			td, th {
+				padding: 4px;
+				border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+			}
 
-							tbody tr:last-child td {
-								border-bottom: 0;
-							}
+			tbody tr:last-child td {
+				border-bottom: 0;
+			}
 
-							th {
-								background: rgba(0, 0, 0, 0.1);
-							}
-						</style>"
+			tr.file th {
+				background: rgba(0, 0, 0, 0.1);
+			}
+
+			tr.heading td {
+				font-weight: bold;
+			}
+		</style>"
 fileOutput.puts "	</head>"
 fileOutput.puts "	<body>"
 fileOutput.puts "		<h1>MyBB Hooks</h1>"
@@ -91,16 +95,21 @@ if (options[:group_output])
 	i = 0
 	file_hooks.each_pair do |key, value|
 		fileOutput.puts "			<thead>"
-		fileOutput.puts "				<tr>"
+		fileOutput.puts "				<tr class=\"file\">"
 		fileOutput.puts "					<th colspan=\"3\" class=\"tcat\"><strong>File: </strong> #{key}</th>"
+		fileOutput.puts "				</tr>"
+		fileOutput.puts "				<tr class=\"heading\">"
+		fileOutput.puts "					<td>Hook</td>"
+		fileOutput.puts "					<td>Params</td>"
+		fileOutput.puts "					<td>Line</td>"
 		fileOutput.puts "				</tr>"
 		fileOutput.puts "			</thead>"
 		fileOutput.puts "			<tbody id=\"hook_group_#{i}\">"
 		file_hooks[key].each do |subVal|
 			fileOutput.puts "				<tr>"
-			fileOutput.puts "					<td><strong>Hook: </strong> #{subVal[0]}</td>"
-			fileOutput.puts "					<td><strong>Params: </strong> #{subVal[1]}</td>"
-			fileOutput.puts "					<td><strong>Line: </strong> #{subVal[2]}</td>"
+			fileOutput.puts "					<td>#{subVal[0]}</td>"
+			fileOutput.puts "					<td>#{subVal[1]}</td>"
+			fileOutput.puts "					<td>#{subVal[2]}</td>"
 			fileOutput.puts "				</tr>"
 		end
 		fileOutput.puts "			</tbody>"
@@ -110,7 +119,11 @@ else
 	hooks.each do |key, value|
 		fileOutput.puts "				<tr>"
 		fileOutput.puts "					<td><strong>Hook: </strong>#{key}</td>"
-		fileOutput.puts "					<td><strong>Params: </strong>#{value[0]}</td>"
+		if (!value[0].empty?)
+			fileOutput.puts "			<td><strong>Params: </strong>#{value[0]}</td>"
+		else
+			fileOutput.puts "			<td></td>"
+		end
 		fileOutput.puts "					<td><strong>File / Line </strong>#{value[1]} / #{value[2]}</td>"
 		fileOutput.puts "				</tr>"
 	end
