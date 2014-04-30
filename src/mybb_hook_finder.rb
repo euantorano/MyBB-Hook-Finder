@@ -132,7 +132,7 @@ File.open(options[:output_file], "w+") do |file| # Write the output file!
 		end
 	end
 
-		file.puts %{</table>
+	file.puts %{</table>
 	</body>
 </html>}
 end
