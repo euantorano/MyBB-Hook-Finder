@@ -22,11 +22,11 @@ You can optionally pass a few options into the script when running it via comman
 This will detail all available options such as below:
 
 ```
-	Usage: mybb_hook_finder.rb [options]
-		-p, --path PATH                  Specify a path to the MyBB root. Defaults to current directory.
-		-o, --output FILE                Specify an output file. Defaults to output.html.
-		-n, --nogroup                    Don't group hooks by file.
-		-h, --help                       Display this help screen
+Usage: mybb_hook_finder.rb [options]
+	-p, --path PATH                  Specify a path to the MyBB root. Defaults to current directory.
+	-o, --output FILE                Specify an output file. Defaults to output.html.
+	-n, --nogroup                    Don't group hooks by file.
+	-h, --help                       Display this help screen
 ```
 
 If you do not pass any arguments to the script, it will run ony any and all PHP scripts in the current directory and it's children and will store the output in ```src/output.html```.
