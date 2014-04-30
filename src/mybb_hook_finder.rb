@@ -115,22 +115,22 @@ File.open(options[:output_file], "w+") do |file| # Write the output file!
 
 			i += 1
 		end
-else
-	hooks.each do |key, value|
-		file.puts %{<tr>
-				<td><strong>Hook: </strong>#{key}</td>
-				<td>}
+	else
+		hooks.each do |key, value|
+			file.puts %{<tr>
+					<td><strong>Hook: </strong>#{key}</td>
+					<td>}
 
-		if (!value[0].empty?)
-			file.puts "<strong>Params: </strong>#{value[0]}"
+			if (!value[0].empty?)
+				file.puts "<strong>Params: </strong>#{value[0]}"
+			end
+
+			file.puts %{</td>
+					<td><strong>File / Line </strong>#{value[1]} / #{value[2]}</td>
+				</tr>}
+
 		end
-
-		file.puts %{</td>
-				<td><strong>File / Line </strong>#{value[1]} / #{value[2]}</td>
-			</tr>}
-
 	end
-end
 
 		file.puts %{</table>
 	</body>
