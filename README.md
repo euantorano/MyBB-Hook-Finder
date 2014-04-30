@@ -21,7 +21,7 @@ You can optionally pass a few options into the script when running it via comman
 
 This will detail all available options such as below:
 
-```
+```bash
 Usage: mybb_hook_finder.rb [options]
 	-p, --path PATH                  Specify a path to the MyBB root. Defaults to current directory.
 	-o, --output FILE                Specify an output file. Defaults to output.html.
