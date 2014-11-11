@@ -40,9 +40,9 @@ Dir.glob(options[:mybb_root] + "**/*.php") do |mybb_file|
 		while !file.eof? # Loop through every line of the file looking for matches - have to do it this way to get the line number
 			line = file.readline
 			line_no += 1
-			if (line =~ /\$plugins\->run_hooks\(((["']?)([a-zA-Z\-_0-9]*)(["']?))([,]?)([ \$a-zA-Z0-9]*?)\);/i) # Does the lien contains a $plugins->run_hooks() call? If so, we've found a hook!
-				hooks[$3.strip] = [$6.strip, mybb_file, line_no]
-				file_hooks[file_name].push([$3.strip, $6.strip, line_no])
+			if (line =~ /\$plugins->run_hooks\(['|"]([\w ]+)['|"](, ?(\$[\w]+))*\);/) # Does the lien contains a $plugins->run_hooks() call? If so, we've found a hook!
+				hooks[$1] = [$3, mybb_file, line_no]
+				file_hooks[file_name].push([$1, $3, line_no])
 			end
 		end
 	end
