@@ -3,3 +3,6 @@ Thumbs.db
 
 # Folder config file
 Desktop.ini
+
+# Output file from generation
+src/output.html
