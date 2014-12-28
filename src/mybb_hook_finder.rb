@@ -3,6 +3,11 @@
 # Command line arguments
 require 'optparse'
 
+if RUBY_VERSION =~ /1.9/ # assuming you're running Ruby ~1.9
+	Encoding.default_external = Encoding::UTF_8
+	Encoding.default_internal = Encoding::UTF_8
+end
+
 options = {}
 OptionParser.new do |opts|
 	opts.banner = "Usage: mybb_hook_finder.rb [options]"
@@ -40,7 +45,7 @@ Dir.glob(options[:mybb_root] + "**/*.php") do |mybb_file|
 		while !file.eof? # Loop through every line of the file looking for matches - have to do it this way to get the line number
 			line = file.readline
 			line_no += 1
-			if (line =~ /\$plugins->run_hooks\(['|"]([\w ]+)['|"](, ?(\$[\w]+))*\);/) # Does the lien contains a $plugins->run_hooks() call? If so, we've found a hook!
+			if (line =~ /\$plugins->run_hooks\(['|"]([\w ]+)['|"](, ?(\$[\w]+))*\);/)
 				hooks[$1] = [$3, mybb_file, line_no]
 				file_hooks[file_name].push([$1, $3, line_no])
 			end
@@ -48,7 +53,7 @@ Dir.glob(options[:mybb_root] + "**/*.php") do |mybb_file|
 	end
 end
 
-File.open(options[:output_file], "w+") do |file| # Write the output file!
+File.open(options[:output_file], "w+") do |file| # Write the output file
 	file.puts %{<!doctype html>
 <html lang="en-GB">
 	<head>
