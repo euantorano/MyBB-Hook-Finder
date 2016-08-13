@@ -5,4 +5,4 @@ Thumbs.db
 Desktop.ini
 
 # Output file from generation
-src/output.html
+src/output.*
